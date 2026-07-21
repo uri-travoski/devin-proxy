@@ -4,7 +4,13 @@ An OpenAI-compatible API proxy for [Devin AI](https://devin.ai). Run it with Doc
 
 ## Quick Start
 
-1. Create a `.env` file in the project root:
+1. Create the Docker network (if it doesn't exist):
+
+```bash
+docker network create mydocker_network
+```
+
+2. Create a `.env` file in the project root:
 
 ```bash
 DEVIN_API_KEY=your_devin_api_key
@@ -12,17 +18,17 @@ DEVIN_ORG_ID=org-your-org-id
 PROXY_API_KEY=your_proxy_api_key
 ```
 
-2. Start the proxy:
+3. Start the proxy:
 
 ```bash
 docker compose up -d
 ```
 
-3. Point your OpenAI-compatible app at the proxy:
+4. Point your OpenAI-compatible app at the proxy:
 
 | Setting | Value |
 |---|---|
-| API Base URL | `http://devin-proxy:8000/v1` (from another container on the same network) |
+| API Base URL | `http://devin-proxy:8000/v1` |
 | API Key | Your `PROXY_API_KEY` |
 | Model | `adaptive`, `glm5.2-high`, or `swe1.7-max` |
 
@@ -34,7 +40,32 @@ docker compose up -d
 | `glm5.2-high` | fast | ~2x faster, higher throughput |
 | `swe1.7-max` | ultra | Maximum capability |
 
+## Connecting From Another Container
+
+The proxy is only accessible internally via the `mydocker_network` Docker network — no ports are exposed to the host. Other containers on the same network can reach it at `http://devin-proxy:8000`.
+
+Add this to your app's `docker-compose.yml`:
+
+```yaml
+services:
+  my-app:
+    # ... your app config ...
+    networks:
+      - mydocker_network
+    environment:
+      - OPENAI_API_BASE=http://devin-proxy:8000/v1
+      - OPENAI_API_KEY=your_proxy_api_key
+
+networks:
+  mydocker_network:
+    external: true
+```
+
+Docker's internal DNS resolves the service name `devin-proxy` to the container's IP automatically.
+
 ## Usage Examples
+
+These examples assume you're running from another container on the same `mydocker_network`.
 
 ### cURL
 
