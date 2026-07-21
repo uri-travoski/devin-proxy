@@ -1,0 +1,14 @@
+services:
+  devin-proxy:
+    image: ghcr.io/uri-travoski/devin-proxy:latest
+    ports:
+      - "${PROXY_PORT:-8000}:8000"
+    environment:
+      - DEVIN_API_URL=https://api.devin.ai
+      - DEVIN_API_KEY=${DEVIN_API_KEY}
+      - DEVIN_ORG_ID=${DEVIN_ORG_ID}
+      - PROXY_API_KEY=${PROXY_API_KEY}
+      - SESSION_IDLE_TIMEOUT=1800
+      - POLL_INTERVAL=3
+      - MAX_POLL_DURATION=600
+    restart: unless-stopped
