@@ -22,7 +22,7 @@ docker compose up -d
 
 | Setting | Value |
 |---|---|
-| API Base URL | `http://localhost:8000/v1` |
+| API Base URL | `http://devin-proxy:8000/v1` (from another container on the same network) |
 | API Key | Your `PROXY_API_KEY` |
 | Model | `adaptive`, `glm5.2-high`, or `swe1.7-max` |
 
@@ -39,7 +39,7 @@ docker compose up -d
 ### cURL
 
 ```bash
-curl http://localhost:8000/v1/chat/completions \
+curl http://devin-proxy:8000/v1/chat/completions \
   -H "Authorization: Bearer your_proxy_api_key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -51,7 +51,7 @@ curl http://localhost:8000/v1/chat/completions \
 ### Streaming
 
 ```bash
-curl http://localhost:8000/v1/chat/completions \
+curl http://devin-proxy:8000/v1/chat/completions \
   -H "Authorization: Bearer your_proxy_api_key" \
   -H "Content-Type: application/json" \
   -d '{
@@ -64,7 +64,7 @@ curl http://localhost:8000/v1/chat/completions \
 ### List Models
 
 ```bash
-curl http://localhost:8000/v1/models \
+curl http://devin-proxy:8000/v1/models \
   -H "Authorization: Bearer your_proxy_api_key"
 ```
 
@@ -74,7 +74,7 @@ curl http://localhost:8000/v1/models \
 from openai import OpenAI
 
 client = OpenAI(
-    base_url="http://localhost:8000/v1",
+    base_url="http://devin-proxy:8000/v1",
     api_key="your_proxy_api_key",
 )
 
@@ -96,7 +96,6 @@ All configuration is via environment variables (set in `.env` or `docker-compose
 | `DEVIN_API_KEY` | (required) | Devin API key |
 | `DEVIN_ORG_ID` | (required) | Devin organization ID |
 | `PROXY_API_KEY` | (required) | API key for proxy authentication |
-| `PROXY_PORT` | `8000` | Port the proxy listens on |
 | `SESSION_IDLE_TIMEOUT` | `1800` | Seconds before idle sessions are cleaned up |
 | `POLL_INTERVAL` | `3` | Seconds between status polls |
 | `MAX_POLL_DURATION` | `600` | Max seconds to poll before timeout |

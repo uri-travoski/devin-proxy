@@ -1,8 +1,8 @@
 services:
   devin-proxy:
     image: ghcr.io/uri-travoski/devin-proxy:latest
-    ports:
-      - "${PROXY_PORT:-8000}:8000"
+    expose:
+      - "8000"
     environment:
       - DEVIN_API_URL=https://api.devin.ai
       - DEVIN_API_KEY=${DEVIN_API_KEY}
